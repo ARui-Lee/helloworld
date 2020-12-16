@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shpowernode.model.dao.StudentMapper">
+  <resultMap id="BaseResultMap" type="com.shpowernode.entity.Student">
+    <!--@mbg.generated-->
+    <!--@Table t_student-->
+    <id column="stu_id" jdbcType="INTEGER" property="stuId" />
+    <result column="stu_name" jdbcType="VARCHAR" property="stuName" />
+    <result column="stu_sex" jdbcType="VARCHAR" property="stuSex" />
+    <result column="stu_status" jdbcType="VARCHAR" property="stuStatus" />
+    <result column="stu_age" jdbcType="INTEGER" property="stuAge" />
+    <result column="stu_date" jdbcType="DATE" property="stuDate" />
+    <result column="tea_id" jdbcType="INTEGER" property="teaId"/>
+    <result column="tea_name" jdbcType="VARCHAR" property="teacher.teaName"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    stu_id, stu_name, stu_sex, stu_status, stu_age, stu_date,tea_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from t_student
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--@mbg.generated-->
+    delete from t_student
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="stu_id" keyProperty="stuId" parameterType="com.shpowernode.entity.Student" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into t_student (stu_name, stu_sex, stu_status, 
+      stu_age, stu_date)
+    values (#{stuName,jdbcType=VARCHAR}, #{stuSex,jdbcType=VARCHAR}, #{stuStatus,jdbcType=VARCHAR}, 
+      #{stuAge,jdbcType=INTEGER}, #{stuDate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" keyColumn="stu_id" keyProperty="stuId" parameterType="com.shpowernode.entity.Student" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into t_student
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stuName != null and stuName != ''">
+        stu_name,
+      </if>
+      <if test="stuSex != null and stuSex != ''">
+        stu_sex,
+      </if>
+      <if test="stuStatus != null and stuStatus != ''">
+        stu_status,
+      </if>
+      <if test="stuAge != null">
+        stu_age,
+      </if>
+      <if test="stuDate != null">
+        stu_date,
+      </if>
+      <if test="teaId != null">
+        tea_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stuName != null and stuName != ''">
+        #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuSex != null and stuSex != ''">
+        #{stuSex,jdbcType=VARCHAR},
+      </if>
+      <if test="stuStatus != null and stuStatus != ''">
+        #{stuStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="stuAge != null">
+        #{stuAge,jdbcType=INTEGER},
+      </if>
+      <if test="stuDate != null">
+        #{stuDate,jdbcType=DATE},
+      </if>
+      <if test="stuDate != null">
+        #{teaId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <delete id="deleteBatch">
+    delete from t_student
+    where stu_id in
+    <!--collection为集合名称，参数类型为array时，集合名称为array；参数类型为list，集合名称为list-->
+    <!--item为变量名字-->
+    <foreach collection="array" close=")" open="(" item="stuId" separator=",">
+      #{stuId}
+    </foreach>
+    <!--(1,2,3,4,5)-->
+  </delete>
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.shpowernode.entity.Student">
+    <!--@mbg.generated-->
+    update t_student
+    <set>
+      <if test="stuName != null and stuName != ''">
+        stu_name = #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuSex != null and stuSex != ''">
+        stu_sex = #{stuSex,jdbcType=VARCHAR},
+      </if>
+      <if test="stuStatus != null and stuStatus != ''">
+        stu_status = #{stuStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="stuAge != null">
+        stu_age = #{stuAge,jdbcType=INTEGER},
+      </if>
+      <if test="stuDate != null">
+        stu_date = #{stuDate,jdbcType=DATE},
+      </if>
+    </set>
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.shpowernode.entity.Student">
+    <!--@mbg.generated-->
+    update t_student
+    set stu_name = #{stuName,jdbcType=VARCHAR},
+      stu_sex = #{stuSex,jdbcType=VARCHAR},
+      stu_status = #{stuStatus,jdbcType=VARCHAR},
+      stu_age = #{stuAge,jdbcType=INTEGER},
+      stu_date = #{stuDate,jdbcType=DATE}
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    stu_id, stu_name, stu_sex, stu_status, stu_age, stu_date,s.tea_id,tea_name
+    from t_student s
+    left join t_teacher t
+    on s.tea_id=t.tea_id
+  </select>
+
+
+
+  <select id="selectByStudent"  resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from t_student
+    where 1=1
+      <if test="stuName!=null and stuName!=''">
+      <!--查询的name等属性需要动态获取，所以使用concat拼接字符串-->
+      <!--#{}为占位符 相当于？ -->
+      AND stu_name like concat('%',#{stuName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="stuSex != null and stuSex != '' ">
+      AND stu_sex = #{stuSex,jdbcType=VARCHAR}
+    </if>
+    <if test="stuStatus!=null and stuStatus!=''">
+      AND stu_status = #{stuStatus,jdbcType=VARCHAR}
+    </if>
+    <if test="stuAgeBegin!=null">
+      AND stu_age &gt;= #{stuAgeBegin,jdbcType=INTEGER}
+    </if>
+    <if test="stuAgeEnd!=null">
+      AND stu_age &lt;= #{stuAgeEnd,jdbcType=INTEGER}
+    </if>
+    <if test="stuDateBegin!=null and stuDateBegin!=''">
+      AND stu_Date &gt;= STR_TO_DATE(#{stuDateBegin,jdbcType=VARCHAR},'%Y-%m-%d')
+    </if>
+    <if test="stuDateEnd!=null and stuDateEnd!=''">
+      AND stu_Date &lt;= STR_TO_DATE(#{stuDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+    </if>
+    <if test="teaId!=null">
+    AND tea_id = #{teaId,jdbcType=INTEGER}
+    </if>
+
+  </select>
+
+  <select id="selectByPages" resultMap="BaseResultMap">
+    SELECT
+    s.stu_id, s.stu_name, s.stu_sex, s.stu_status,s.tea_id,t.tea_name
+    from t_student s
+    left join t_teacher t
+      on s.tea_id=t.tea_id
+    limit #{skipNo},#{pageNo}
+  </select>
+</mapper>
